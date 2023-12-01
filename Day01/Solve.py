@@ -21,24 +21,24 @@ for art in calibration_values:
 print(f'Part 1 : calibration value is {calibration}')
 
 def decode_art_better(art : str):
-    numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9',
-            'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
-    occurences = [art.rfind(num) for num in numbers]
-    last_digit_idx = occurences.index(max(occurences))
+    # numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9',
+    #         'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
+    # occurences = [art.rfind(num) for num in numbers]
+    # last_digit_idx = occurences.index(max(occurences))
 
-    occurences = [art.find(num) for num in numbers]
-    for idx, occ in enumerate(occurences):
-        if occ == -1:
-            occurences[idx] = 100
-    first_digit_idx = occurences.index(min(occurences))
+    # occurences = [art.find(num) for num in numbers]
+    # for idx, occ in enumerate(occurences):
+    #     if occ == -1:
+    #         occurences[idx] = 100
+    # first_digit_idx = occurences.index(min(occurences))
 
-    if last_digit_idx >= 9:
-        last_digit_idx -= 9
-    if first_digit_idx >= 9:
-        first_digit_idx -= 9
-        
-    value = int(str(first_digit_idx+1) + str(last_digit_idx+1))
-    return value
+    # if last_digit_idx >= 9:
+    #     last_digit_idx -= 9
+    # if first_digit_idx >= 9:
+    #     first_digit_idx -= 9
+
+    # value = int(str(first_digit_idx+1) + str(last_digit_idx+1))
+    # return value
 
     # Shorter but I don't like it
     
@@ -49,6 +49,16 @@ def decode_art_better(art : str):
     #     str_art = str_art.replace(str_numbers[i], numbers[i])
     
     # return decode_art(str_art)
+
+    # Much Better !
+    
+    str_numbers = ['on1ne', 'tw2wo', 'thr3ee', 'fo4ur', 'fi5ve', 'si6ix', 'sev7ven', 'eig8ght', 'ni9ne']
+    numbers = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
+    str_art = art
+    for i in range(len(str_numbers)):
+        str_art = str_art.replace(numbers[i], str_numbers[i])
+    
+    return decode_art(str_art)
 
 
 
