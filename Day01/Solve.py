@@ -21,6 +21,10 @@ for art in calibration_values:
 print(f'Part 1 : calibration value is {calibration}')
 
 def decode_art_better(art : str):
+    #--------
+    #Original
+    #--------
+
     # numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9',
     #         'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
     # occurences = [art.rfind(num) for num in numbers]
@@ -40,8 +44,10 @@ def decode_art_better(art : str):
     # value = int(str(first_digit_idx+1) + str(last_digit_idx+1))
     # return value
 
+    #----------------------------
     # Shorter but I don't like it
-    
+    #----------------------------
+
     # str_numbers = ['oneight', 'nineight', 'fiveight', 'twone', 'eightwo', 'eighthree', 'sevenine', 'threeight', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
     # numbers = ['18', '98', '58', '21', '82', '83', '79', '38', '1', '2', '3', '4', '5', '6', '7', '8', '9']
     # str_art = art
@@ -50,7 +56,9 @@ def decode_art_better(art : str):
     
     # return decode_art(str_art)
 
+    #--------------
     # Much Better !
+    #--------------
     
     str_numbers = ['on1ne', 'tw2wo', 'thr3ee', 'fo4ur', 'fi5ve', 'si6ix', 'sev7ven', 'eig8ght', 'ni9ne']
     numbers = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
