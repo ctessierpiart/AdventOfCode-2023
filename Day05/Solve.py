@@ -1,35 +1,38 @@
-class Seed:
-    def __init__(self, ID):
+class conversionMap:
+    def __init__(self, ID, map : list):
         self.ID = ID
-        self.soil = -1
-        self.fert = -1
-        self.water = -1
-        self.light = -1
-        self.temp = -1
-        self.hum = -1
-        self.location = -1
+        self.map = map
 
-    def findLocation(self, maps):
-        self.soil = self._findeq(self.ID, maps[0])
-        self.fert = self._findeq(self.soil, maps[1])
-        self.water = self._findeq(self.fert, maps[2])
-        self.light = self._findeq(self.water, maps[3])
-        self.temp = self._findeq(self.light, maps[4])
-        self.hum = self._findeq(self.temp, maps[5])
-        self.location = self._findeq(self.hum, maps[6])
-        return self.location
+    def findNext(self, attribute):
+        for map in self.map:
+            if attribute in range(map[1], map[1] + map[2]):
+                return map[0] + (attribute - map[1])
+        return attribute
+    
+    def findPrevious(self, attribute):
+        for map in self.map:
+            if attribute in range(map[0], map[0] + map[2]):
+                return map[1] + (attribute - map[0])
+        return attribute
 
-    def _findeq(self, att, map):
-        for conv in map:
-            if att in range(conv[1], conv[1] + conv[2]):
-                return conv[0] + (att - conv[1])
-        return att 
+def findLocation(seed, maps):
+    attribute = seed
+    for conversionmap in maps:
+        attribute = conversionmap.findNext(attribute)
+    return attribute
+
+def findSeed(location, maps):
+    attribute = location
+    for conversionmap in reversed(maps):
+        attribute = conversionmap.findPrevious(attribute)
+    return attribute
         
 maps = []
+Seeds = []
 with open('Day05/Input.txt') as file:
     listSeeds = file.readline().strip().split(' ')
     listSeeds = listSeeds[1:]
-    Seeds = [Seed(int(element)) for element in listSeeds]
+    Seeds = [(int(element)) for element in listSeeds]
     state = ''
     StS, StF, FtW, WtL, LtT, TtH, HtL = [], [], [], [], [], [], []
     for line in file.readlines():
@@ -56,33 +59,37 @@ with open('Day05/Input.txt') as file:
                 TtH.append(conv)
             elif state == 'HtL':
                 HtL.append(conv)
-    StS.sort(key = lambda elem : elem[1])
-    StF.sort(key = lambda elem : elem[1])
-    FtW.sort(key = lambda elem : elem[1])
-    WtL.sort(key = lambda elem : elem[1])
-    LtT.sort(key = lambda elem : elem[1])
-    TtH.sort(key = lambda elem : elem[1])
-    HtL.sort(key = lambda elem : elem[1])
-    maps = [StS, StF, FtW, WtL, LtT, TtH, HtL]
+    StSMap = conversionMap('Seed To Soil', StS)
+    StFMap = conversionMap('Soil To Fert', StF)
+    FtWMap = conversionMap('Fert To Wate', FtW)
+    WtLMap = conversionMap('Wate To Ligh', WtL)
+    LtTMap = conversionMap('Ligh To Temp', LtT)
+    TtHMap = conversionMap('Temp to Hume', TtH)
+    HtLMap = conversionMap('Hume to Loca', HtL)
+    maps = [StSMap, StFMap, FtWMap, WtLMap, LtTMap, TtHMap, HtLMap]
 
-locations = [seed.findLocation(maps) for seed in Seeds]
+locations = [findLocation(seed, maps) for seed in Seeds]
 
 print(f'Part 1 : the lowest location is {min(locations)}')
 
-Seeds = []
-isStart = True
-for idx, seed_range in enumerate(listSeeds):
-    if isStart:
-        isStart = False
-        for seedID in range(int(seed_range), int(seed_range)+int(listSeeds[idx+1])):
-            Seeds.append(Seed(seedID))
-    else:
-        isStart = True
+seedRanges = [[Seeds[idx], Seeds[idx+1]] for idx in range(0, len(Seeds), 2)]
 
-minlocation = Seeds[0].findLocation(maps)
-for seed in Seeds:
-    if seed.findLocation(maps) < minlocation:
-        minlocation = seed.location
+currentLocation = 0
+stepLocation = 1000000
+currentSeed = 0
+while(stepLocation != 0):
+    seedFound = False
+    currentLocation += stepLocation
+    currentSeed = findSeed(currentLocation, maps)
+    for seedRange in seedRanges:
+        if currentSeed in range(seedRange[0], seedRange[0] + seedRange[1]):
+            seedFound = True
+    print(f'{currentLocation} => {currentSeed}')
+    if seedFound:
+        if stepLocation == 1:
+            break
+        currentLocation -= stepLocation
+        stepLocation //= 10
+        currentLocation -= stepLocation
 
-print(f'Part 2 : the lowest location is {minlocation}')
-
+print(f'Part 2 : Lowest seed {currentSeed}')
