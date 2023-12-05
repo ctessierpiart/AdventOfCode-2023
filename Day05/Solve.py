@@ -84,7 +84,6 @@ while(stepLocation != 0):
     for seedRange in seedRanges:
         if currentSeed in range(seedRange[0], seedRange[0] + seedRange[1]):
             seedFound = True
-    print(f'{currentLocation} => {currentSeed}')
     if seedFound:
         if stepLocation == 1:
             break
