@@ -12,3 +12,5 @@
     - First started with Seed oriented objects
     - Part 2 made me switch to map oriented objects
     - Final solution is not 100% fool proof as it uses granular search
+- [Day 6](https://github.com/ctessierpiart/AdventOfCode-2023/blob/main/Day06/Solve.py) :
+    - Just a Polynomial
