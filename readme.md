@@ -14,3 +14,5 @@
     - Final solution is not 100% fool proof as it uses granular search
 - [Day 6](https://github.com/ctessierpiart/AdventOfCode-2023/blob/main/Day06/Solve.py) :
     - Just a Polynomial
+- [Day 7](https://github.com/ctessierpiart/AdventOfCode-2023/blob/main/Day07/Solve.py) :
+    - Need to learn how to read
