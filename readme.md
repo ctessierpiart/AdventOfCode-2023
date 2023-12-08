@@ -16,3 +16,5 @@
     - Just a Polynomial
 - [Day 7](https://github.com/ctessierpiart/AdventOfCode-2023/blob/main/Day07/Solve.py) :
     - Need to learn how to read
+- [Day 8](https://github.com/ctessierpiart/AdventOfCode-2023/blob/main/Day08/Solve.py) :
+    - Not a nice day, the answer was kind of hidden in the input
