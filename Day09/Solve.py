@@ -22,7 +22,7 @@ class Parameter:
     
     def extratpolateBack(self):
         listExtrapolation = [self.history]
-        while self.sumabs(listExtrapolation[-1]):
+        while sum(map(abs, listExtrapolation[-1])):
             newExtrapol = []
             for idx in range(1, len(listExtrapolation[-1])):
                 val = listExtrapolation[-1][idx] - listExtrapolation[-1][idx-1]
@@ -37,25 +37,12 @@ class Parameter:
             listExtrapolation[idx] = [valeExtrapolation] + listExtrapolation[idx]
             
         return listExtrapolation[0][0]
-
-    def sumabs(self, list):
-        sumabs = 0
-        for elem in list:
-            sumabs += abs(elem)
-        return sumabs
-            
-        
+                
 with open('Day09/Input.txt') as file:
     Parameters = [Parameter(line.strip()) for line in file.readlines()]
 
-sumExtra = 0
-for param in Parameters:
-    sumExtra += param.extratpolate()
-
+sumExtra = sum([param.extrapolate() for param in Parameters])
 print(f'Part 1 : {sumExtra}')
 
-sumExtra = 0
-for param in Parameters:
-    sumExtra += param.extratpolateBack()
-
+sumExtra = sum([param.extratpolateBack() for param in Parameters])
 print(f'Part 2 : {sumExtra}')
