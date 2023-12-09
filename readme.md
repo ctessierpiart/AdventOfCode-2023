@@ -19,3 +19,5 @@
 - [Day 8](https://github.com/ctessierpiart/AdventOfCode-2023/blob/main/Day08/Solve.py) :
     - Not a nice day, the answer was kind of hidden in the input
     - Part 1 was easy but I am very sad Python doesn't support reccurence that well
+- [Day 8](https://github.com/ctessierpiart/AdventOfCode-2023/blob/main/Day08/Solve.py) :
+    - Doing this problem "by the book" implies a little bit of subtlety
