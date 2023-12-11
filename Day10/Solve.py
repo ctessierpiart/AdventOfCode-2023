@@ -3,6 +3,7 @@ class Node:
         self.coord = coord
         self.nodeType = nodeType
         self.links = []
+        self.isLoop = False
         (x, y) = coord
         if nodeType == '|':
             self.links = [(x, y+1), (x, y-1)]
@@ -62,6 +63,7 @@ class LoopMap:
                     elif node.coord in rightNode.links and node.coord in upNode.links:
                         type = 'L'
                     self.Nodes[yStart][xStart] = Node(type, (xStart, yStart))
+                    self.Nodes[yStart][xStart].isLoop = True
                     self.startNode = Node(type, (xStart, yStart))
                     break
     
@@ -85,41 +87,60 @@ class LoopMap:
             link = next
         return nbstep
     
-    def scanNeighbours(self, node, previousNode):
-        nodeCoord = node.coord
-        upNode =     self.map((nodeCoord[0],     nodeCoord[1] - 1))
-        downNode =   self.map((nodeCoord[0],     nodeCoord[1] + 1))
-        leftNode =   self.map((nodeCoord[0] - 1, nodeCoord[1]))
-        rightNode =  self.map((nodeCoord[0] + 1, nodeCoord[1]))
-        
-        for node in [upNode, downNode, rightNode, leftNode]:
-            if node == 0:
+    def isInside(self, node):
+        even = True
+        isF = False
+        isL = False
+        for idx in range(node.coord[0]):
+            if self.Nodes[node.coord[1]][idx].isLoop == False:
                 continue
-            if node.nodeType != 'X':
+            if self.Nodes[node.coord[1]][idx].nodeType == '|':
+                even = not even
+            elif self.Nodes[node.coord[1]][idx].nodeType == 'J' and isF:
+                even = not even
+                isF = False
+            elif self.Nodes[node.coord[1]][idx].nodeType == '7' and isL:
+                even = not even
+                isL = False
+            elif self.Nodes[node.coord[1]][idx].nodeType == 'F' and isF == False:
+                isF = True
+            elif self.Nodes[node.coord[1]][idx].nodeType == 'L' and isL == False:
+                isL = True
+            elif self.Nodes[node.coord[1]][idx].nodeType == '7' and isF:
+                isF = False
+            elif self.Nodes[node.coord[1]][idx].nodeType == 'J' and isL:
+                isL = False
+                
+        
+        if even:
+            return False
+        return True
     
     def areaInsideLoop(self):
         (linkCoord, _) = self.startNode.links
         link = self.map(linkCoord)
         last = self.startNode 
         while link.coord != self.startNode.coord:
-            link.nodeType = 'X'
+            link.isLoop = True
             nextCoord = link.nextNode(last.coord)
             next = self.map(nextCoord)
             last = link
             link = next
-            
-        (linkCoord, _) = self.startNode.links
-        link = self.map(linkCoord)
-        last = self.startNode
-        while link.coord != self.startNode.coord:
-            
-            
-            nextCoord = link.nextNode(last.coord)
-            next = self.map(nextCoord)
-            last = link
-            link = next
+        
+        area = 0  
+        for line in self.Nodes:
+            for node in line:
+                if node.isLoop:
+                    continue
+                area += self.isInside(node)
+        return area
+                
+                
                 
 Map = LoopMap('Day10/Input.txt')
 
 dist = Map.findFarthest()
 print(f'Part 1 : {dist//2}')
+
+area = Map.areaInsideLoop()
+print(f'Part 2 : {area}')
