@@ -5,10 +5,7 @@ class Galaxy:
         self.y = coord[1]
 
 def findGaps(axis, dictGlaxy):
-    if axis == 'x':
-        listPos =  [galaxy.x for galaxy in dictGlaxy.values()]
-    else:
-        listPos =  [galaxy.y for galaxy in dictGlaxy.values()]
+    listPos =  [galaxy.__getattribute__(axis) for galaxy in dictGlaxy.values()]
     listVoid = []
     for idx in range(max(listPos)):
         if idx in listPos:
