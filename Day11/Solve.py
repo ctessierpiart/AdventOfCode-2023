@@ -1,4 +1,3 @@
-Map = []
 class Galaxy:
     def __init__(self, coord : tuple):
         self.coord = coord
