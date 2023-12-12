@@ -24,6 +24,5 @@
 - [Day 10](https://github.com/ctessierpiart/AdventOfCode-2023/blob/main/Day10/Solve.py) :
     - Not a Nice Puzzle
     - Tried a convoluted method that really isn't worth it
-    - Retried it, I just needed to sum the areas under '-'....
 - [Day 11](https://github.com/ctessierpiart/AdventOfCode-2023/blob/main/Day11/Solve.py) :
     - Nice

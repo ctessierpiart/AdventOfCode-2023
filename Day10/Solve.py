@@ -134,23 +134,6 @@ class LoopMap:
                     continue
                 area += self.isInside(node)
         return area
-    
-    def areaInsideLoop2(self):
-        area = 0
-        (linkCoord, _) = self.startNode.links
-        link = self.map(linkCoord)
-        last = self.startNode 
-        while link.coord != self.startNode.coord:
-            link.isLoop = True
-            linkCoord =  link.coord
-            nextCoord = link.nextNode(last.coord)
-            if link.nodeType == '-':
-                area += (nextCoord[0] - link.coord[0])*nextCoord[1]
-            next = self.map(nextCoord)
-            last = link
-            link = next
-
-        return area
 
 Map = LoopMap('Day10/Input.txt')
 
