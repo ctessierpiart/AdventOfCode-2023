@@ -22,47 +22,83 @@ class Mirror:
             col += self.data[n + idx*self.len_x]
         return col
     
-    def getSym(self, smudge_OK = False):
+    def getSym(self):
         isSym = False
         for idx in range(self.len_y-1):
-            self.smudged = True
-            if self.calcDiff(self.getLine(idx), self.getLine(idx+1), smudge_OK) == False:
-                continue
-            isSym = True
+            isSym = self.isEqual(self.getLine(idx), self.getLine(idx+1))
             n=0
             while isSym:
                 n += 1
                 line1, line2 = self.getLine(idx-n), self.getLine(idx+1+n)
-                if line1 == 0 or line2 == 0:
+                if (line1 == 0 or line2 == 0):
                     return (idx + 1) * 100
-                isSym = self.calcDiff(line1, line2, smudge_OK)
+                isSym = self.isEqual(line1, line2)
         
         for idx in range(self.len_x-1):
-            self.smudged = True
-            if self.calcDiff(self.getCol(idx), self.getCol(idx+1), smudge_OK) == False:
-                continue
-            isSym = True
+            isSym = self.isEqual(self.getCol(idx), self.getCol(idx+1))
             n=0
             while isSym:
                 n += 1
                 line1, line2 = self.getCol(idx-n), self.getCol(idx+1+n)
-                if line1 == 0 or line2 == 0:
-                    return idx + 1
-                isSym = self.calcDiff(line1, line2, smudge_OK)
-
+                if (line1 == 0 or line2 == 0):
+                    return (idx + 1)
+                isSym = self.isEqual(line1, line2)
         return 0
 
-    def calcDiff(self, line1, line2, smudge_OK):
+    def isEqual(self, line1, line2):
         nbDiff = 0
         for char1, char2 in zip(line1, line2):
             if char1 != char2:
                 nbDiff += 1
         if nbDiff == 0:
             return True
-        if nbDiff == 1 and smudge_OK and not self.smudged == False:
+        return False
+    
+    def getSymSmudge(self):
+        isSym = False
+        for idx in range(self.len_y-1):
+            line1, line2 = self.getLine(idx), self.getLine(idx+1)
+            self.smudged = False
+            isSym = self.isEqualSmudge(line1, line2)
+            n = 0
+            while isSym:
+                n += 1
+                line1, line2 = self.getLine(idx-n), self.getLine(idx+1+n)
+                if (line1 == 0 or line2 == 0):
+                    if self.smudged:
+                        return (idx + 1)*100
+                    else:
+                        break
+                isSym = self.isEqualSmudge(line1, line2)
+        isSym = False
+        for idx in range(self.len_x-1):
+            line1, line2 = self.getCol(idx), self.getCol(idx+1)
+            self.smudged = False
+            isSym = self.isEqualSmudge(line1, line2)
+            n = 0
+            while isSym:
+                n += 1
+                line1, line2 = self.getCol(idx-n), self.getCol(idx+1+n)
+                if (line1 == 0 or line2 == 0):
+                    if self.smudged:
+                        return (idx + 1)
+                    else:
+                        break
+                isSym = self.isEqualSmudge(line1, line2)
+        return 0
+
+    def isEqualSmudge(self, line1, line2):
+        nbDiff = 0
+        for char1, char2 in zip(line1, line2):
+            if char1 != char2:
+                nbDiff += 1
+        if nbDiff == 0:
+            return True
+        elif nbDiff == 1 and not self.smudged:
             self.smudged = True
             return True
         return False
+
 
 
 
@@ -79,6 +115,12 @@ with open('Day13/Input.txt') as file:
 
 result = 0
 for mirror in Mirrors:
-    result += mirror.getSym(True)
+    result += mirror.getSym()
 
 print(f'Part 1 : {result}')
+
+result = 0
+for mirror in Mirrors:
+    result += mirror.getSymSmudge()
+
+print(f'Part 2 : {result}')
