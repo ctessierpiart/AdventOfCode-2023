@@ -1,4 +1,4 @@
-import time
+import copy
 
 class Dish:
     def __init__(self, filelocation):
@@ -9,6 +9,7 @@ class Dish:
                 self.len_x = len(line.strip())
                 self.map += [char for char in line.strip()]
                 self.len_y += 1
+        self.strainHistory = []
 
     def getLoc(self, x, y):
         if x >= self.len_x or x < 0 or y >= self.len_y or y < 0:
@@ -86,13 +87,14 @@ class Dish:
             self.setLoc(Current_x-n+1, Current_y, 'O')
 
     def cycle(self, nCycle):
-        t = time.time()
-        for _ in range(nCycle):
+        self.strainHistory.append(self.getStrain())
+        for i in range(nCycle):
             self.moveNorth()
             self.moveWest()
             self.moveSouth()
             self.moveEast()
-        print(time.time() - t)
+            print(i, self.getStrain())
+            self.strainHistory.append(self.getStrain())
 
     def getStrain(self):
         totalStrain = 0
@@ -101,6 +103,31 @@ class Dish:
                 [_, Current_y] = self.idxToCoord(idx)
                 totalStrain += self.len_y-Current_y
         return totalStrain
+    
+    def findCycle(self):
+        oneTime = []
+        twoTimes = []
+        self.sequence_lenghts = 0
+        self.sequence_start = 0
+        self.sequence = []
+        for idx, strain in enumerate(self.strainHistory):
+            if strain in self.strainHistory[idx+1:]:
+                findidx = self.strainHistory[idx+1:].index(strain) +1
+                if findidx not in oneTime:
+                    oneTime.append(findidx)
+                elif findidx not in twoTimes:
+                    twoTimes.append(findidx)
+                else:
+                    self.sequence_lenghts = findidx
+                    self.sequence_start = idx
+                    break
+
+        for idx in range(self.sequence_start, self.sequence_start+self.sequence_lenghts):
+            self.sequence.append(self.strainHistory[idx])
+
+    def findStrain(self, nCycle):
+        return self.sequence[(nCycle - self.sequence_start) %self.sequence_lenghts]
+
 
 
 Part1 = Dish('Day14/Input.txt')
@@ -108,6 +135,7 @@ Part1.moveNorth()
 print(f'Part 1 : {Part1.getStrain()}')
 
 Part2 = Dish('Day14/Input.txt')
-Part2.cycle(1000)
-print(f'Part 1 : {Part2.getStrain()}')
+Part2.cycle(300)
+Part2.findCycle()
+print(f'Part 2 : {Part2.findStrain(1000000000)}')
 

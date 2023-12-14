@@ -26,3 +26,9 @@
     - Tried a convoluted method that really isn't worth it
 - [Day 11](https://github.com/ctessierpiart/AdventOfCode-2023/blob/main/Day11/Solve.py) :
     - Nice
+- [Day 12](https://github.com/ctessierpiart/AdventOfCode-2023/blob/main/Day12/Solve.py) :
+    - Nice
+- [Day 13](https://github.com/ctessierpiart/AdventOfCode-2023/blob/main/Day13/Solve.py) :
+    - Badly worded 
+- [Day 14](https://github.com/ctessierpiart/AdventOfCode-2023/blob/main/Day14/Solve.py) :
+    - It works, I guess...
