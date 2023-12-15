@@ -32,3 +32,5 @@
     - Badly worded 
 - [Day 14](https://github.com/ctessierpiart/AdventOfCode-2023/blob/main/Day14/Solve.py) :
     - It works, I guess...
+- [Day 15](https://github.com/ctessierpiart/AdventOfCode-2023/blob/main/Day15/Solve.py) :
+    - Chill day
