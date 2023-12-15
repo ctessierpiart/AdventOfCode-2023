@@ -1,0 +1,45 @@
+import re
+import itertools
+
+class Spring:
+    def __init__(self, line):
+        [self.spring, numberString] = line.strip().split(' ')
+        self.counts = [int(char) for char in numberString.split(',')]
+        self.spring = self.spring
+
+    def solve(self):
+        #Machine state : all possible transition with '.' being a loop as well
+        machine_state = '.'.join(['#'*sequence for sequence in self.counts]) + '.'
+
+        state_dict = {0 : 1} # begin at state 0 once (1)
+        for i in range(1, len(machine_state)):
+            state_dict[i] = 0
+        next_state_dict = {}
+
+        for char in self.spring:
+            for state, state_iter in state_dict.items():
+                if state >= len(state_dict) - 1:
+                    break
+                if char == '.': #either stay or transition from #
+                    if machine_state[state] == '.':
+                        next_state_dict[state] += state_iter
+                    if machine_state[state+1] == '.':
+                        next_state_dict[state + 1] += state_iter
+
+                elif char == '#': #Go to text state if next state is #
+                    if machine_state[state + 1] == '#':
+                        next_state_dict[state + 1] = state_iter
+
+                elif char == '?': #Always go to next state
+                    next_state_dict[state] = state_iter
+                    next_state_dict[state + 1] = state_iter
+        
+        state_dict = next_state_dict
+        next_state_dict = {}
+
+Springs = []
+with open('Day12/Example.txt') as file:
+    Springs = [Spring(line.strip()) for line in file.readlines()]
+
+for spring in Springs:
+    spring.solve()
