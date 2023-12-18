@@ -34,3 +34,5 @@
     - It works, I guess...
 - [Day 15](https://github.com/ctessierpiart/AdventOfCode-2023/blob/main/Day15/Solve.py) :
     - Chill day
+- [Day 16](https://github.com/ctessierpiart/AdventOfCode-2023/blob/main/Day16/Solve.py) :
+    - Very fun to make a pretty solution for
