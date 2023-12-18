@@ -36,3 +36,5 @@
     - Chill day
 - [Day 16](https://github.com/ctessierpiart/AdventOfCode-2023/blob/main/Day16/Solve.py) :
     - Very fun to make a pretty solution for
+- [Day 18](https://github.com/ctessierpiart/AdventOfCode-2023/blob/main/Day18/Solve.py) :
+    - I didn't want to remove the first soltion for part 1 so it got pretty convoluted at the end

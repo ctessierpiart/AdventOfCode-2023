@@ -16,7 +16,15 @@ class Edge:
         elif self.direction == 'R': 
             self.end_x += (self.length - 1)
             self.step_x, self.step_y = 1, 0
-    
+
+    def useColor(self):
+        lengthStr = self.color[2:-2]
+        dirStr = self.color[-2]
+        dir = ['R', 'D', 'L', 'U']
+        dirStr = dir[int(dirStr)]
+        lengthStr = str(int(lengthStr, 16))
+        self.__init__(' '.join([dirStr, lengthStr, '_']), (self.start_x, self.start_y))
+        
     def endCoord(self):
         return (self.end_x, self.end_y)
     
@@ -62,7 +70,6 @@ class Map:
                 for idx in range(edge.start_y, edge.end_y, edge.step_y):
                     self.set_off(edge.start_x, idx, 1)
                     self.set_off(edge.start_x - edge.step_y, idx, 2)
-        self.debug()
 
         diff = 1
         while diff != 0:
@@ -81,47 +88,45 @@ class Map:
 
         return sum(self.terrain)
     
-    def fixLength(self, edgeBefore, edge, edgeAfter):
+    def makeContour(self, edgeBefore, edge, edgeAfter):
+        ContourLength = edge.length - 1
         if edge.direction == 'R':
             if edgeBefore.direction == 'U' and edgeAfter.direction == 'D':
-                return edge.length
+                ContourLength = edge.length
             elif edgeBefore.direction == 'D' and edgeAfter.direction == 'U':
-                return edge.length - 2
-            else:
-                return edge.length - 1
+                ContourLength = edge.length - 2
         elif edge.direction == 'L':
             if edgeBefore.direction == 'U' and edgeAfter.direction == 'D':
-                return edge.length - 2
+                ContourLength = edge.length - 2
             elif edgeBefore.direction == 'D' and edgeAfter.direction == 'U':
-                return edge.length
-            else:
-                return edge.length - 1
+                ContourLength = edge.length
         elif edge.direction == 'U':
-            if edgeBefore.direction == 'L' and edgeAfter.direction == 'L':
-                return edge.length
+            if edgeBefore.direction == 'L' and edgeAfter.direction == 'R':
+                ContourLength = edge.length
             elif edgeBefore.direction == 'R' and edgeAfter.direction == 'L':
-                return edge.length-2
-            else:
-                return edge.length - 1
+                ContourLength = edge.length-2
         elif edge.direction == 'D':
-            if edgeBefore.direction == 'L' and edgeAfter.direction == 'L':
-                return edge.length-2
+            if edgeBefore.direction == 'L' and edgeAfter.direction == 'R':
+                ContourLength = edge.length-2
             elif edgeBefore.direction == 'R' and edgeAfter.direction == 'L':
-                return edge.length
-            else:
-                return edge.length - 1
-        return 0
+                ContourLength = edge.length
+        
+        config = ' '.join([edge.direction, str(ContourLength), '_'])
+        return Edge(config, (edgeBefore.end_x, edgeBefore.end_y))
 
     def Part1_smarter(self):
-        areaBegin = self.correctLength(Edges[-1], Edges[0], Edges[1])*(Edges[0].start_y-self.min_y)
-        areaEnd = self.correctLength(Edges[-2], Edges[-1], Edges[0])*(Edges[-1].start_y-self.min_y)
-        area = areaBegin + areaEnd
+        #make the true contour
+        firstEdge = self.makeContour(Edges[-1], Edges[0], Edges[1])
+        Contour = [firstEdge]
         for idx, edge in enumerate(Edges[1:-1]):
-            if edge.direction == 'R':
-                area += self.correctLength(Edges[idx], edge, Edges[idx+2])*(edge.start_y-self.min_y - 1)
-            else: 
-                 area += self.correctLength(Edges[idx], edge, Edges[idx+2])*(edge.start_y-self.min_y)
-        return area
+            Contour.append(self.makeContour(Contour[idx], edge, Edges[idx+2]))
+        Contour.append(self.makeContour(Contour[-1], Edges[-1], Contour[0]))
+        area = 0
+        for contour in Contour:
+            if contour.step_x != 0:
+                area+= contour.step_x * (contour.length-1) * contour.start_y
+        return abs(area)
+
 
     def check_neighbours(self, x, y, value):
         neighbours = [self.get(x, y-1), self.get(x, y+1), 
@@ -137,7 +142,7 @@ class Map:
         print()
 
 Edges = []
-with open('Day18/Example.txt') as file:
+with open('Day18/Input.txt') as file:
     coord = (0,0)
     for line in file.readlines():
         localEdge = Edge(line.strip(), coord)
@@ -149,3 +154,9 @@ result = Terrain.Part1()
 print(f'Part 1 : {result}')
 result = Terrain.Part1_smarter()
 print(f'Part 1 : {result}')
+
+for edge in Edges:
+    edge.useColor()
+result = Terrain.Part1_smarter()
+print(f'Part 2 : {result}')
+
