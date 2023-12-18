@@ -28,6 +28,7 @@
     - Nice
 - [Day 12](https://github.com/ctessierpiart/AdventOfCode-2023/blob/main/Day12/Solve.py) :
     - Nice
+    - PART 2 : Only could solve it using a the redditor u/blekpul explaination on his github page (https://github.com/clrfl/AdventOfCode2023/tree/master/12). Truly amazing theory. (Also stole his python tricks for dict)
 - [Day 13](https://github.com/ctessierpiart/AdventOfCode-2023/blob/main/Day13/Solve.py) :
     - Badly worded 
 - [Day 14](https://github.com/ctessierpiart/AdventOfCode-2023/blob/main/Day14/Solve.py) :

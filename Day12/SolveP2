@@ -2,14 +2,18 @@ import re
 import itertools
 
 class Spring:
-    def __init__(self, line):
+    def __init__(self, line, big = False):
         [self.spring, numberString] = line.strip().split(' ')
         self.counts = [int(char) for char in numberString.split(',')]
         self.spring = self.spring
+        
+        if big:
+            self.counts = 5*self.counts
+            self.spring = '?'.join(5*[self.spring])
 
     def solve(self):
         #Machine state : all possible transition with '.' being a loop as well
-        machine_state = '.'.join(['#'*sequence for sequence in self.counts]) + '.'
+        machine_state = '.' + '.'.join(['#'*sequence for sequence in self.counts]) + '.'
 
         state_dict = {0 : 1} # begin at state 0 once (1)
         for i in range(1, len(machine_state)):
@@ -18,28 +22,46 @@ class Spring:
 
         for char in self.spring:
             for state, state_iter in state_dict.items():
-                if state >= len(state_dict) - 1:
-                    break
                 if char == '.': #either stay or transition from #
+                    if state < len(machine_state) - 1 and machine_state[state+1] == '.':
+                        next_state_dict[state + 1] = next_state_dict.get(state + 1, 0) + state_iter
                     if machine_state[state] == '.':
-                        next_state_dict[state] += state_iter
-                    if machine_state[state+1] == '.':
-                        next_state_dict[state + 1] += state_iter
+                        next_state_dict[state] = next_state_dict.get(state, 0) + state_iter
 
                 elif char == '#': #Go to text state if next state is #
-                    if machine_state[state + 1] == '#':
-                        next_state_dict[state + 1] = state_iter
-
+                    if state < len(machine_state) - 1 and machine_state[state + 1] == '#':
+                        next_state_dict[state + 1] = next_state_dict.get(state + 1, 0) + state_iter
+ 
                 elif char == '?': #Always go to next state
-                    next_state_dict[state] = state_iter
-                    next_state_dict[state + 1] = state_iter
+                    if state < len(machine_state) - 1:
+                        next_state_dict[state + 1] = next_state_dict.get(state + 1, 0) + state_iter
+                    if machine_state[state] == '.':
+                        next_state_dict[state] = next_state_dict.get(state, 0) + state_iter
         
-        state_dict = next_state_dict
-        next_state_dict = {}
+            state_dict = next_state_dict
+            next_state_dict = {}
+        
+        nbStates = 0
+        if len(machine_state)-1 in state_dict.keys(): #do the machine state go to the end ?
+            nbStates += state_dict[len(machine_state)-1]
+        if len(machine_state)-2 in state_dict.keys(): #the machine state only need to go to the last #
+            nbStates += state_dict[len(machine_state)-2]
+        return nbStates
 
 Springs = []
-with open('Day12/Example.txt') as file:
+with open('Day12/Input.txt') as file:
     Springs = [Spring(line.strip()) for line in file.readlines()]
 
+result = 0
 for spring in Springs:
-    spring.solve()
+    result += spring.solve()
+print(f'Part 1 : {result}')
+
+SpringsP2 = []
+with open('Day12/Input.txt') as file:
+    SpringsP2 = [Spring(line.strip(), big = True) for line in file.readlines()]
+
+result = 0
+for spring in SpringsP2:
+    result += spring.solve()
+print(f'Part 2 : {result}')
