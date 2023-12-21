@@ -33,8 +33,27 @@ class Workflow:
             elif process['op'] == '>':
                 if Piece.values[process['value']] > process['ref']:
                     return process['result']
+                
+    def P2(self, workflows):
+        if self.name == 'A':
+            return 1
+        elif self.name == 'R':
+            return 0
+        
+        return_value = 0
+        for process in self.processes:
+            value = workflows[process['result']].P2(workflows)
+            if value != 0:
+                return_value = value + pro
+            if value
 
+    def possibilites(self, process):
+        if process['op'] == '=':
+            return 4000**2
+        if process['op'] == '<':
+            return 4000**2 * (4000-process['ref'])
 
+                
 class Piece:
     def __init__(self, line):
         values = re.findall(r'\d+', line)
@@ -68,10 +87,11 @@ with open('Day19/Input.txt') as file:
                 Workflows[workflow.name] = workflow
             else:
                 Pieces.append(Piece(line.strip()))
+Workflows['A'] = Workflow('A\{A\}')
+Workflows['R'] = Workflow('R\{R\}')
 
 result = 0
 for piece in Pieces:
     piece.process(Workflows)
     result += piece.gearValue
 print(f'Part 1 : {result}')
-        
