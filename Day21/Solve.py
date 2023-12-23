@@ -107,3 +107,5 @@ Garden = Map('Day21/Example.txt')
 
 print(f'Part 1 {Garden.solveP1(6)}')
 print(f'Part 1 {Garden.solveP2(6)}')
+
+try
