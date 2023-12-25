@@ -6,7 +6,7 @@ class Brick:
             self.coord_end = [int(char) for char in end_coord_str.split(',')]
         else:
             self.coord_begin = line.coord_begin
-            self.coord_end = line.coord
+            self.coord_end = line.coord_end
             delta = self.coord_begin[2] - start_z
             self.coord_end[2] -= delta
             self.coord_begin[2] -= delta
@@ -16,6 +16,9 @@ class Brick:
         self.contact_below = []
         self.lowest_point = min(self.z1, self.z2)
         self.highest_point = max(self.z1, self.z2)
+        
+    def __repr__(self):
+        return f'{self.coord_begin}~{self.coord_end}'
 
 class Space:
     def __init__(self, filelocation):
@@ -27,23 +30,31 @@ class Space:
         self.bricks.sort(key= lambda brick:brick.lowest_point)
         self.settle = []
         for idx_brick, brick in enumerate(self.bricks):
+            new_brick = None
             for settled_brick in reversed(self.settle):
                 if self.check_overlap(brick, settled_brick):
-                    new_brick = Brick(brick, settled_brick.highest_point)
+                    new_brick = Brick(brick, settled_brick.highest_point+1)
+                    break
+            if new_brick == None:
+                new_brick = Brick(brick, 0)
+            self.settle.append(new_brick)
                 
-
     def get_brick(self, idx):
         if idx < 0 or idx >= self.len:
             return None
         return self.bricks[idx]
 
     def check_overlap(self, brick1, brick2):
-        if ((brick1.x1 in range(brick2.x1, brick2.x2+1) and 
-            brick1.y2 in range(brick2.y1, brick2.y2+1)) or
-            (brick1.y1 in range(brick2.y1, brick2.y2+1) and 
-            brick1.x2 in range(brick2.x1, brick2.x2+1))):
+        f3 = ((brick2.x1 - brick1.x1)*(brick1.y2 - brick1.y1) -
+              (brick2.y1 - brick1.y1)*(brick1.x2 - brick1.x1))
+        f4 = ((brick2.x2 - brick1.x1)*(brick1.y2 - brick1.y1) -
+              (brick2.y2 - brick1.y1)*(brick1.x2 - brick1.x1))
+        g1 = ((brick1.x1 - brick2.x1)*(brick2.y2 - brick2.y1) -
+              (brick1.y1 - brick2.y1)*(brick2.x2 - brick2.x1))
+        g2 = ((brick1.x2 - brick2.x1)*(brick2.y2 - brick2.y1) -
+              (brick1.y2 - brick2.y1)*(brick2.x2 - brick2.x1))
+        if (f3 *f4 <= 0) and (g1*g2 <= 0):
             return True
-        return False
 
 Puzzle = Space('Day22/Example.txt')
 a=1
